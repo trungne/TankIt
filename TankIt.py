@@ -28,9 +28,15 @@ class Tank:
             self.location[1] += self.vel
 
     def turn(self):  # left + right
-        self.location[0] = self.location[0] - (self.size[1] - self.size[0]) // 2  # x coordinate
-        self.location[1] = self.location[1] + (self.size[1] - self.size[0]) // 2  # y coordinate
-
+        self.location[0] = self.location[0] - abs(self.size[1] - self.size[0]) // 2  # x coordinate
+        self.location[1] = self.location[1] + abs(self.size[1] - self.size[0]) // 2  # y coordinate
+        if self.size[0] < self.size[1]:
+            self.size[0], self.size[1] = self.size[1], self.size[0]
+    def turnupdown(self):
+        self.location[0] = self.location[0] + abs(self.size[1] - self.size[0]) // 2
+        self.location[1] = self.location[1] - abs(self.size[1] - self.size[0]) // 2
+        if self.size[0] > self.size[1]:
+            self.size[0], self.size[1] = self.size[1], self.size[0]
     #     else:  # up + down
     #         self.location[0] = self.location[0] + (self.size[1] - self.size[0])// 2  # x
     #         self.location[1] = self.location[1] - (self.size[1] - self.size[0])// 2  # y
@@ -58,19 +64,21 @@ while run:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and MainTank.location[0] > 0:
+        MainTank.turn()
         MainTank.move(left=True)
-        #MainTank.turn()
-        # MainTank.turn(lr=True)
 
     if keys[pygame.K_RIGHT] and MainTank.location[0] < window[0] - MainTank.size[0]:
+        MainTank.turn()
         MainTank.move(right=True)
-        #MainTank.turn()
+
 
     if keys[pygame.K_UP] and MainTank.location[1] > 0:
+        MainTank.turnupdown()
         MainTank.move(up=True)
         # MainTank.turn(lr=False)
 
     if keys[pygame.K_DOWN] and MainTank.location[1] < window[1] - MainTank.size[1]:
+        MainTank.turnupdown()
         MainTank.move(down=True)
         # MainTank.turn(lr=False)
 
