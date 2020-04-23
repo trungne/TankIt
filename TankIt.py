@@ -2,13 +2,13 @@ import pygame
 
 pygame.init()
 # basic display
-window = (512, 512)
+window = (640, 640)
 win = pygame.display.set_mode(window)
 pygame.display.set_caption("TankIt")
 clock = pygame.time.Clock()
 
 # images file import:
-bg = pygame.image.load('grass00.png')
+bg = pygame.image.load('grass.png')
 faceleft = pygame.image.load('tankBaseleft.png')
 faceright = pygame.image.load('tankBaseright.png')
 faceup = pygame.image.load('tankBaseup.png')
