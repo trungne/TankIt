@@ -5,6 +5,7 @@ pygame.init()
 window = (512, 512)
 win = pygame.display.set_mode(window)
 pygame.display.set_caption("TankIt")
+clock = pygame.time.Clock()
 
 # images file import:
 bg = pygame.image.load('grass00.png')
@@ -31,6 +32,8 @@ class Tank:
     def move(self):
         if self.vel < self.maxspeed:
             self.vel += self.acceleration
+        else:
+            self.vel = self.maxspeed
 
         if self.dir == [-1, 0]:  # left
             self.location[0] -= self.vel
@@ -41,7 +44,7 @@ class Tank:
         elif self.dir == [0, -1]:  # up
             self.location[1] -= self.vel
 
-        elif self.dir == [0, 1]: # down
+        elif self.dir == [0, 1]:  # down
             self.location[1] += self.vel
 
 MainTank = Tank([250, 250], 32, 32, 0, 0)
@@ -84,17 +87,13 @@ while run:
                 MainTank.acceleration = 0.2
         elif event.type == pygame.KEYUP:
             if event.key in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN):
-
                 MainTank.acceleration = 0
-
-    MainTank.vel += MainTank.acceleration
-    if MainTank.vel >= MainTank.maxspeed:
-        MainTank.vel = MainTank.maxspeed
 
     if MainTank.acceleration == 0:
         MainTank.vel *= 0.92
 
     MainTank.move()
     redrawWindows()
+    clock.tick(60)
 
 pygame.quit()
