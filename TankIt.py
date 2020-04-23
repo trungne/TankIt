@@ -16,50 +16,46 @@ facedown = pygame.image.load('tankBasedown.png')
 
 # character - tank
 class Tank:
-    def __init__(self, location, width, height, vel, acceleration, left=False, right=False, up=False, down=False):
+    def __init__(self, location, width, height, vel, acceleration, dir=[0, -1]):
         # attributes
         self.location = location
         self.width = width
         self.height = height
         self.vel = vel
         self.acceleration = acceleration
-        self.maxspeed = 15
+        self.maxspeed = 10
 
         # facing
-        self.left = left
-        self.right = right
-        self.up = up
-        self.down = down
+        self.dir = dir
 
     def move(self):
-        if self.left:
+        if self.vel < self.maxspeed:
             self.vel += self.acceleration
+
+        if self.dir == [-1, 0]:  # left
             self.location[0] -= self.vel
 
-        elif self.right:
-            self.vel += self.acceleration
+        elif self.dir == [1, 0]:  # right
             self.location[0] += self.vel
 
-        elif self.up:
-            self.vel += self.acceleration
+        elif self.dir == [0, -1]:  # up
             self.location[1] -= self.vel
 
-        elif self.down:
-            self.vel += self.acceleration
+        elif self.dir == [0, 1]: # down
             self.location[1] += self.vel
 
-MainTank = Tank([250, 250], 32, 32, 0, 0, up=True)
+MainTank = Tank([250, 250], 32, 32, 0, 0)
 
 
 def redrawWindows():
     win.blit(bg, (0, 0))
-    if MainTank.left:
+    if MainTank.dir == [-1, 0]:
         win.blit(faceleft, (MainTank.location[0], MainTank.location[1]))
-    elif MainTank.right:
+    elif MainTank.dir == [1, 0]:
         win.blit(faceright, (MainTank.location[0], MainTank.location[1]))
-    elif MainTank.up:
+    elif MainTank.dir == [0, -1]:
         win.blit(faceup, (MainTank.location[0], MainTank.location[1]))
-    elif MainTank.down:
+    elif MainTank.dir == [0, 1]:
         win.blit(facedown, (MainTank.location[0], MainTank.location[1]))
 
     pygame.display.update()
@@ -75,31 +71,20 @@ while run:
             run = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT and MainTank.location[0] > 0:
-                MainTank.left = True
-                MainTank.right = False
-                MainTank.up = False
-                MainTank.down = False
+                MainTank.dir = [-1, 0]
                 MainTank.acceleration = 0.2
             elif event.key == pygame.K_RIGHT and MainTank.location[0] < window[0] - MainTank.width:
-                MainTank.left = False
-                MainTank.right = True
-                MainTank.up = False
-                MainTank.down = False
+                MainTank.dir = [1, 0]
                 MainTank.acceleration = 0.2
             elif event.key == pygame.K_UP and MainTank.location[1] > 0:
-                MainTank.left = False
-                MainTank.right = False
-                MainTank.up = True
-                MainTank.down = False
+                MainTank.dir = [0, -1]
                 MainTank.acceleration = 0.2
             elif event.key == pygame.K_DOWN and MainTank.location[1] < window[1] - MainTank.height:
-                MainTank.left = False
-                MainTank.right = False
-                MainTank.up = False
-                MainTank.down = True
+                MainTank.dir = [0, 1]
                 MainTank.acceleration = 0.2
         elif event.type == pygame.KEYUP:
             if event.key in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN):
+
                 MainTank.acceleration = 0
 
     MainTank.vel += MainTank.acceleration
