@@ -36,13 +36,13 @@ class Tank:
             self.vel = self.maxspeed
 
         if self.dir == [-1, 0]:  # left
-            self.location[0] -= self.vel
+            self.location[0] += self.vel
 
         elif self.dir == [1, 0]:  # right
             self.location[0] += self.vel
 
         elif self.dir == [0, -1]:  # up
-            self.location[1] -= self.vel
+            self.location[1] += self.vel
 
         elif self.dir == [0, 1]:  # down
             self.location[1] += self.vel
@@ -75,13 +75,13 @@ while run:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT and MainTank.location[0] > 0:
                 MainTank.dir = [-1, 0]
-                MainTank.acceleration = 0.2
+                MainTank.acceleration = -0.2
             elif event.key == pygame.K_RIGHT and MainTank.location[0] < window[0] - MainTank.width:
                 MainTank.dir = [1, 0]
                 MainTank.acceleration = 0.2
             elif event.key == pygame.K_UP and MainTank.location[1] > 0:
                 MainTank.dir = [0, -1]
-                MainTank.acceleration = 0.2
+                MainTank.acceleration = -0.2
             elif event.key == pygame.K_DOWN and MainTank.location[1] < window[1] - MainTank.height:
                 MainTank.dir = [0, 1]
                 MainTank.acceleration = 0.2
