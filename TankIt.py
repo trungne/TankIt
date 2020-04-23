@@ -33,20 +33,22 @@ class Tank:
 
     def move(self):
         if self.left:
-            if self.vel != self.maxspeed:
-                self.vel += self.acceleration
+            self.vel += self.acceleration
             self.location[0] -= self.vel
+
         elif self.right:
+            self.vel += self.acceleration
             self.location[0] += self.vel
+
         elif self.up:
+            self.vel += self.acceleration
             self.location[1] -= self.vel
+
         elif self.down:
+            self.vel += self.acceleration
             self.location[1] += self.vel
-        else:
-            pass
 
-
-MainTank = Tank([250, 250], 32, 32, 0, 0.2, up=True)
+MainTank = Tank([250, 250], 32, 32, 0, 0, up=True)
 
 
 def redrawWindows():
@@ -71,37 +73,43 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT and MainTank.location[0] > 0:
+                MainTank.left = True
+                MainTank.right = False
+                MainTank.up = False
+                MainTank.down = False
+                MainTank.acceleration = 0.2
+            elif event.key == pygame.K_RIGHT and MainTank.location[0] < window[0] - MainTank.width:
+                MainTank.left = False
+                MainTank.right = True
+                MainTank.up = False
+                MainTank.down = False
+                MainTank.acceleration = 0.2
+            elif event.key == pygame.K_UP and MainTank.location[1] > 0:
+                MainTank.left = False
+                MainTank.right = False
+                MainTank.up = True
+                MainTank.down = False
+                MainTank.acceleration = 0.2
+            elif event.key == pygame.K_DOWN and MainTank.location[1] < window[1] - MainTank.height:
+                MainTank.left = False
+                MainTank.right = False
+                MainTank.up = False
+                MainTank.down = True
+                MainTank.acceleration = 0.2
+        elif event.type == pygame.KEYUP:
+            if event.key in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN):
+                MainTank.acceleration = 0
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and MainTank.location[0] > 0:
-        MainTank.left = True
-        MainTank.right = False
-        MainTank.up = False
-        MainTank.down = False
-        MainTank.move()
+    MainTank.vel += MainTank.acceleration
+    if MainTank.vel >= MainTank.maxspeed:
+        MainTank.vel = MainTank.maxspeed
 
-    if keys[pygame.K_RIGHT] and MainTank.location[0] < window[0] - MainTank.width:
-        MainTank.left = False
-        MainTank.right = True
-        MainTank.up = False
-        MainTank.down = False
-        MainTank.move()
+    if MainTank.acceleration == 0:
+        MainTank.vel *= 0.92
 
-    if keys[pygame.K_UP] and MainTank.location[1] > 0:
-        MainTank.left = False
-        MainTank.right = False
-        MainTank.up = True
-        MainTank.down = False
-        MainTank.move()
-
-    if keys[pygame.K_DOWN] and MainTank.location[1] < window[1] - MainTank.height:
-        MainTank.left = False
-        MainTank.right = False
-        MainTank.up = False
-        MainTank.down = True
-        MainTank.move()
-
-    #MainTank.move()
+    MainTank.move()
     redrawWindows()
 
 pygame.quit()
