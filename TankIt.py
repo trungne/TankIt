@@ -8,8 +8,10 @@ pygame.display.set_caption("TankIt")
 
 # images file import:
 bg = pygame.image.load('grass00.png')
-facesideway = pygame.image.load('tankBasesideway.png')
-faceupdown = pygame.image.load('tankBase.png')
+faceleft = pygame.image.load('tankBaseleft.png')
+faceright = pygame.image.load('tankBaseright.png')
+faceup = pygame.image.load('tankBaseup.png')
+facedown = pygame.image.load('tankBasedown.png')
 
 
 # character - tank
@@ -33,16 +35,23 @@ class Tank:
             self.location[1] -= self.vel
         elif self.down:
             self.location[1] += self.vel
+        else:
+            pass
 
 
-MainTank = Tank([250, 250], 32, 32, 10, up=True)
+MainTank = Tank([250, 250], 32, 32, 0, up=True)
+
+
 def redrawWindows():
     win.blit(bg, (0, 0))
-    if MainTank.left or MainTank.right:
-        win.blit(facesideway, (MainTank.location[0], MainTank.location[1]))
-
-    if MainTank.up or MainTank.down:
-        win.blit(faceupdown, (MainTank.location[0], MainTank.location[1]))
+    if MainTank.left:
+        win.blit(faceleft, (MainTank.location[0], MainTank.location[1]))
+    elif MainTank.right:
+        win.blit(faceright, (MainTank.location[0], MainTank.location[1]))
+    elif MainTank.up:
+        win.blit(faceup, (MainTank.location[0], MainTank.location[1]))
+    elif MainTank.down:
+        win.blit(facedown, (MainTank.location[0], MainTank.location[1]))
 
     pygame.display.update()
 
@@ -63,7 +72,7 @@ while run:
         MainTank.up = False
         MainTank.down = False
 
-        MainTank.move()
+
 
     if keys[pygame.K_RIGHT] and MainTank.location[0] < window[0] - MainTank.width:
         MainTank.left = False
@@ -71,15 +80,11 @@ while run:
         MainTank.up = False
         MainTank.down = False
 
-        MainTank.move()
-
     if keys[pygame.K_UP] and MainTank.location[1] > 0:
         MainTank.left = False
         MainTank.right = False
         MainTank.up = True
         MainTank.down = False
-
-        MainTank.move()
 
     if keys[pygame.K_DOWN] and MainTank.location[1] < window[1] - MainTank.height:
         MainTank.left = False
@@ -87,8 +92,7 @@ while run:
         MainTank.up = False
         MainTank.down = True
 
-        MainTank.move()
-
+    MainTank.move()
     redrawWindows()
 
 pygame.quit()
