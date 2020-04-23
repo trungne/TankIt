@@ -16,11 +16,16 @@ facedown = pygame.image.load('tankBasedown.png')
 
 # character - tank
 class Tank:
-    def __init__(self, location, width, height, vel, left=False, right=False, up=False, down=False):
+    def __init__(self, location, width, height, vel, acceleration, left=False, right=False, up=False, down=False):
+        # attributes
         self.location = location
         self.width = width
         self.height = height
         self.vel = vel
+        self.acceleration = acceleration
+        self.maxspeed = 15
+
+        # facing
         self.left = left
         self.right = right
         self.up = up
@@ -28,6 +33,8 @@ class Tank:
 
     def move(self):
         if self.left:
+            if self.vel != self.maxspeed:
+                self.vel += self.acceleration
             self.location[0] -= self.vel
         elif self.right:
             self.location[0] += self.vel
@@ -39,7 +46,7 @@ class Tank:
             pass
 
 
-MainTank = Tank([250, 250], 32, 32, 0, up=True)
+MainTank = Tank([250, 250], 32, 32, 0, 0.2, up=True)
 
 
 def redrawWindows():
@@ -71,28 +78,30 @@ while run:
         MainTank.right = False
         MainTank.up = False
         MainTank.down = False
-
-
+        MainTank.move()
 
     if keys[pygame.K_RIGHT] and MainTank.location[0] < window[0] - MainTank.width:
         MainTank.left = False
         MainTank.right = True
         MainTank.up = False
         MainTank.down = False
+        MainTank.move()
 
     if keys[pygame.K_UP] and MainTank.location[1] > 0:
         MainTank.left = False
         MainTank.right = False
         MainTank.up = True
         MainTank.down = False
+        MainTank.move()
 
     if keys[pygame.K_DOWN] and MainTank.location[1] < window[1] - MainTank.height:
         MainTank.left = False
         MainTank.right = False
         MainTank.up = False
         MainTank.down = True
+        MainTank.move()
 
-    MainTank.move()
+    #MainTank.move()
     redrawWindows()
 
 pygame.quit()
