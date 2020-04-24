@@ -35,10 +35,11 @@ class Tank:
         # constraint
         if abs(self.velX) < self.maxspeed:
             self.velX += self.accelerationX
-            print(self.velX)
+            print('X: %s'%self.velX)
 
         if abs(self.velY) < self.maxspeed:
             self.velY += self.accelerationY
+            print('Y: %s'%self.velY)
 
         # move object
         if self.velX:  # left
@@ -53,6 +54,7 @@ class Tank:
         if self.velY:  # down
             self.location[1] += self.velY
             print('going down')
+
     def redrawtank(self):
         if self.dir == [-1, 0]:
             win.blit(faceleft, (self.location[0], self.location[1]))
@@ -82,27 +84,27 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT and MainTank.location[0] > 0:
+            if event.key == pygame.K_LEFT: #and MainTank.location[0] > 0:
                 MainTank.dir = [-1, 0]
                 MainTank.accelerationX = -0.2
-            elif event.key == pygame.K_RIGHT and MainTank.location[0] < window[0] - MainTank.width:
+            if event.key == pygame.K_RIGHT: #and MainTank.location[0] < window[0] - MainTank.width:
                 MainTank.dir = [1, 0]
                 MainTank.accelerationX = 0.2
-            elif event.key == pygame.K_UP and MainTank.location[1] > 0:
+            if event.key == pygame.K_UP: #and MainTank.location[1] > 0:
                 MainTank.dir = [0, -1]
                 MainTank.accelerationY = -0.2
-            elif event.key == pygame.K_DOWN and MainTank.location[1] < window[1] - MainTank.height:
+            if event.key == pygame.K_DOWN: #and MainTank.location[1] < window[1] - MainTank.height:
                 MainTank.dir = [0, 1]
                 MainTank.accelerationY = 0.2
         elif event.type == pygame.KEYUP:
             if event.key in (pygame.K_LEFT, pygame.K_RIGHT):
                 MainTank.accelerationX = 0
-            elif event.key in (pygame.K_UP, pygame.K_DOWN):
+            if event.key in (pygame.K_UP, pygame.K_DOWN):
                 MainTank.accelerationY = 0
-    # TODO: FIX DECELERATION
+    # TODO: FIX DECELERATION (Temporarily fixed)
     if MainTank.accelerationX == 0:
         MainTank.velX *= 0.9
-    elif MainTank.accelerationY == 0:
+    if MainTank.accelerationY == 0:
         MainTank.velY *= 0.9
 
     MainTank.move()
