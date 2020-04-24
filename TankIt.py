@@ -32,15 +32,17 @@ class Tank:
         self.dir = dir
 
     def move(self):
-        print('%s, %s' % (self.location[0], self.location[1]))
-        # constraint
-        if self.location[0] < 0 or self.location[0] > window[0] - self.width:
-            self.accelerationX = 0
+        print(f'{self.location[0]},{self.location[1]}')
+
+        # boundaries
+        if int(self.location[0]) < 0 or int(self.location[0]) > window[0] - self.width:
+            self.accelerationX = 0  # TODO: Fix
             self.velX = - self.velX
-        if self.location[1] < 0 or self.location[1] > window[1] - self.height:
+        if int(self.location[1]) < 0 or int(self.location[1]) > window[1] - self.height:
             self.accelerationY = 0
             self.velY = - self.velY
 
+        # constraint
         if abs(self.velX) < self.maxspeed:
             self.velX += self.accelerationX
 
