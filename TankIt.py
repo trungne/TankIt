@@ -54,7 +54,6 @@ class Tank:
         if self.velY:  # up/down movement
             self.location[1] += self.velY
 
-
     def decelerate(self):
         if self.accelerationX == 0:
             self.velX *= 0.92
@@ -86,21 +85,20 @@ def redrawWindows():
 run = True
 while run:
     pygame.time.delay(10)
-    # TODO: create boundaries (done) but bugs emerge when the tank approaches the boundaries
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:  # and MainTank.location[0] > 0:
+            if event.key == pygame.K_LEFT:
                 MainTank.dir = [-1, 0]
                 MainTank.accelerationX = -0.3
-            if event.key == pygame.K_RIGHT:  # and MainTank.location[0] < window[0] - MainTank.width:
+            if event.key == pygame.K_RIGHT:
                 MainTank.dir = [1, 0]
                 MainTank.accelerationX = 0.3
-            if event.key == pygame.K_UP:  # and MainTank.location[1] > 0:
+            if event.key == pygame.K_UP:
                 MainTank.dir = [0, -1]
                 MainTank.accelerationY = -0.3
-            if event.key == pygame.K_DOWN:  # and MainTank.location[1] < window[1] - MainTank.height:
+            if event.key == pygame.K_DOWN:
                 MainTank.dir = [0, 1]
                 MainTank.accelerationY = 0.3
         elif event.type == pygame.KEYUP:
@@ -109,11 +107,10 @@ while run:
             if event.key in (pygame.K_UP, pygame.K_DOWN):
                 MainTank.accelerationY = 0
 
-    # deleceration
+    # deceleration
     MainTank.decelerate()
 
     MainTank.move()
     redrawWindows()
-    clock.tick(60)
 
 pygame.quit()
