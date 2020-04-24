@@ -26,14 +26,17 @@ class Tank:
         self.velY = velY
         self.accelerationX = accelerationX
         self.accelerationY = accelerationY
-        self.maxspeed = 3
+        self.maxspeed = 6
 
         # facing
         self.dir = dir
 
     def move(self):
-        print('%s, %s' %(self.location[0], self.location[1]))
+        print('%s, %s' % (self.location[0], self.location[1]))
         # constraint
+        if self.location[0] < 0 or self.location[0] > window[0] - self.width:
+            self.accelerationX = 0
+            self.velX = -self.velX
         if abs(self.velX) < self.maxspeed:
             self.velX += self.accelerationX
 
@@ -42,25 +45,15 @@ class Tank:
 
         # move object
         if self.velX:  # left
-            if self.location[0] < 0:
-                self.accelerationX = 0
-                self.velX = -self.velX
+
             self.location[0] += self.velX
-        if self.velX:  # right
-            if self.location[0] > window[0] - self.width:
-                self.accelerationX = 0
-                self.velX = -self.velX
-            self.location[0] += self.velX
+
         if self.velY:  # up
-            if self.location[1] < 0:
+            if self.location[1] < 0 or self.location[1] > window[1] - self.height:
                 self.accelerationY = 0
                 self.velY = -self.velY
             self.location[1] += self.velY
-        if self.velY:  # down
-            if self.location[1] > window[1] - self.height:
-                self.accelerationY = 0
-                self.velY = -self.velY
-            self.location[1] += self.velY
+
 
     def decelerate(self):
         if self.accelerationX == 0:
@@ -92,7 +85,7 @@ def redrawWindows():
 # main loop
 run = True
 while run:
-    pygame.time.delay(30)
+    pygame.time.delay(10)
     # TODO: create boundaries (done) but bugs emerge when the tank approaches the boundaries
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
