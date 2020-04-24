@@ -47,20 +47,22 @@ class Tank:
         elif self.dir == [0, 1]:  # down
             self.location[1] += self.vel
 
+    def redrawtank(self):
+        if self.dir == [-1, 0]:
+            win.blit(faceleft, (self.location[0], self.location[1]))
+        elif self.dir == [1, 0]:
+            win.blit(faceright, (self.location[0], self.location[1]))
+        elif self.dir == [0, -1]:
+            win.blit(faceup, (self.location[0], self.location[1]))
+        elif self.dir == [0, 1]:
+            win.blit(facedown, (self.location[0], self.location[1]))
+
 MainTank = Tank([250, 250], 32, 32, 0, 0)
 
 
 def redrawWindows():
     win.blit(bg, (0, 0))
-    if MainTank.dir == [-1, 0]:
-        win.blit(faceleft, (MainTank.location[0], MainTank.location[1]))
-    elif MainTank.dir == [1, 0]:
-        win.blit(faceright, (MainTank.location[0], MainTank.location[1]))
-    elif MainTank.dir == [0, -1]:
-        win.blit(faceup, (MainTank.location[0], MainTank.location[1]))
-    elif MainTank.dir == [0, 1]:
-        win.blit(facedown, (MainTank.location[0], MainTank.location[1]))
-
+    MainTank.redrawtank()
     pygame.display.update()
 
 
