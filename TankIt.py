@@ -37,6 +37,10 @@ class Tank:
         if self.location[0] < 0 or self.location[0] > window[0] - self.width:
             self.accelerationX = 0
             self.velX = -self.velX
+        if self.location[1] < 0 or self.location[1] > window[1] - self.height:
+            self.accelerationY = 0
+            self.velY = -self.velY
+
         if abs(self.velX) < self.maxspeed:
             self.velX += self.accelerationX
 
@@ -44,14 +48,10 @@ class Tank:
             self.velY += self.accelerationY
 
         # move object
-        if self.velX:  # left
-
+        if self.velX:  # left/right movement
             self.location[0] += self.velX
 
-        if self.velY:  # up
-            if self.location[1] < 0 or self.location[1] > window[1] - self.height:
-                self.accelerationY = 0
-                self.velY = -self.velY
+        if self.velY:  # up/down movement
             self.location[1] += self.velY
 
 
