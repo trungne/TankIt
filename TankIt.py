@@ -26,34 +26,48 @@ class Tank:
         self.velY = velY
         self.accelerationX = accelerationX
         self.accelerationY = accelerationY
-        self.maxspeed = 4
+        self.maxspeed = 3
 
         # facing
         self.dir = dir
 
     def move(self):
+        print('%s, %s' %(self.location[0], self.location[1]))
         # constraint
         if abs(self.velX) < self.maxspeed:
             self.velX += self.accelerationX
-            print('X: %s'%self.velX)
 
         if abs(self.velY) < self.maxspeed:
             self.velY += self.accelerationY
-            print('Y: %s'%self.velY)
 
         # move object
         if self.velX:  # left
+            if self.location[0] < 0:
+                self.accelerationX = 0
+                self.velX = -self.velX
             self.location[0] += self.velX
-            print('going left')
         if self.velX:  # right
+            if self.location[0] > window[0] - self.width:
+                self.accelerationX = 0
+                self.velX = -self.velX
             self.location[0] += self.velX
-            print('going right')
         if self.velY:  # up
+            if self.location[1] < 0:
+                self.accelerationY = 0
+                self.velY = -self.velY
             self.location[1] += self.velY
-            print('going up')
         if self.velY:  # down
+            if self.location[1] > window[1] - self.height:
+                self.accelerationY = 0
+                self.velY = -self.velY
             self.location[1] += self.velY
-            print('going down')
+
+    def decelerate(self):
+        if self.accelerationX == 0:
+            self.velX *= 0.92
+
+        if self.accelerationY == 0:
+            self.velY *= 0.92
 
     def redrawtank(self):
         if self.dir == [-1, 0]:
@@ -78,34 +92,32 @@ def redrawWindows():
 # main loop
 run = True
 while run:
-    pygame.time.delay(20)
-
+    pygame.time.delay(30)
+    # TODO: create boundaries (done) but bugs emerge when the tank approaches the boundaries
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT: #and MainTank.location[0] > 0:
+            if event.key == pygame.K_LEFT:  # and MainTank.location[0] > 0:
                 MainTank.dir = [-1, 0]
-                MainTank.accelerationX = -0.2
-            if event.key == pygame.K_RIGHT: #and MainTank.location[0] < window[0] - MainTank.width:
+                MainTank.accelerationX = -0.3
+            if event.key == pygame.K_RIGHT:  # and MainTank.location[0] < window[0] - MainTank.width:
                 MainTank.dir = [1, 0]
-                MainTank.accelerationX = 0.2
-            if event.key == pygame.K_UP: #and MainTank.location[1] > 0:
+                MainTank.accelerationX = 0.3
+            if event.key == pygame.K_UP:  # and MainTank.location[1] > 0:
                 MainTank.dir = [0, -1]
-                MainTank.accelerationY = -0.2
-            if event.key == pygame.K_DOWN: #and MainTank.location[1] < window[1] - MainTank.height:
+                MainTank.accelerationY = -0.3
+            if event.key == pygame.K_DOWN:  # and MainTank.location[1] < window[1] - MainTank.height:
                 MainTank.dir = [0, 1]
-                MainTank.accelerationY = 0.2
+                MainTank.accelerationY = 0.3
         elif event.type == pygame.KEYUP:
             if event.key in (pygame.K_LEFT, pygame.K_RIGHT):
                 MainTank.accelerationX = 0
             if event.key in (pygame.K_UP, pygame.K_DOWN):
                 MainTank.accelerationY = 0
-    # TODO: FIX DECELERATION (Temporarily fixed)
-    if MainTank.accelerationX == 0:
-        MainTank.velX *= 0.9
-    if MainTank.accelerationY == 0:
-        MainTank.velY *= 0.9
+
+    # deleceration
+    MainTank.decelerate()
 
     MainTank.move()
     redrawWindows()
