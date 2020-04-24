@@ -36,10 +36,10 @@ class Tank:
         # constraint
         if self.location[0] < 0 or self.location[0] > window[0] - self.width:
             self.accelerationX = 0
-            self.velX = -self.velX
+            self.velX = - self.velX
         if self.location[1] < 0 or self.location[1] > window[1] - self.height:
             self.accelerationY = 0
-            self.velY = -self.velY
+            self.velY = - self.velY
 
         if abs(self.velX) < self.maxspeed:
             self.velX += self.accelerationX
