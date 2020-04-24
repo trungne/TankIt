@@ -33,10 +33,11 @@ class Tank:
 
     def move(self):
         # constraint
-        if self.velX < self.maxspeed:
+        if abs(self.velX) < self.maxspeed:
             self.velX += self.accelerationX
+            print(self.velX)
 
-        if self.velY < self.maxspeed:
+        if abs(self.velY) < self.maxspeed:
             self.velY += self.accelerationY
 
         # move object
@@ -98,11 +99,11 @@ while run:
                 MainTank.accelerationX = 0
             elif event.key in (pygame.K_UP, pygame.K_DOWN):
                 MainTank.accelerationY = 0
-
+    # TODO: FIX DECELERATION
     if MainTank.accelerationX == 0:
-        MainTank.velX *= 0.92
+        MainTank.velX *= 0.9
     elif MainTank.accelerationY == 0:
-        MainTank.velY *= 0.92
+        MainTank.velY *= 0.9
 
     MainTank.move()
     redrawWindows()
