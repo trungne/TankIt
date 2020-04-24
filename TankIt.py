@@ -17,36 +17,41 @@ facedown = pygame.image.load('tankBasedown.png')
 
 # character - tank
 class Tank:
-    def __init__(self, location, width, height, vel, acceleration, dir=[0, -1]):
+    def __init__(self, location, width, height, velX, velY, accelerationX, accelerationY, dir=[0, -1]):
         # attributes
         self.location = location
         self.width = width
         self.height = height
-        self.vel = vel
-        self.acceleration = acceleration
-        self.maxspeed = 10
+        self.velX = velX
+        self.velY = velY
+        self.accelerationX = accelerationX
+        self.accelerationY = accelerationY
+        self.maxspeed = 4
 
         # facing
         self.dir = dir
 
     def move(self):
-        if self.vel < self.maxspeed:
-            self.vel += self.acceleration
-        else:
-            self.vel = self.maxspeed
+        # constraint
+        if self.velX < self.maxspeed:
+            self.velX += self.accelerationX
 
-        if self.dir == [-1, 0]:  # left
-            self.location[0] += self.vel
+        if self.velY < self.maxspeed:
+            self.velY += self.accelerationY
 
-        elif self.dir == [1, 0]:  # right
-            self.location[0] += self.vel
-
-        elif self.dir == [0, -1]:  # up
-            self.location[1] += self.vel
-
-        elif self.dir == [0, 1]:  # down
-            self.location[1] += self.vel
-
+        # move object
+        if self.velX:  # left
+            self.location[0] += self.velX
+            print('going left')
+        if self.velX:  # right
+            self.location[0] += self.velX
+            print('going right')
+        if self.velY:  # up
+            self.location[1] += self.velY
+            print('going up')
+        if self.velY:  # down
+            self.location[1] += self.velY
+            print('going down')
     def redrawtank(self):
         if self.dir == [-1, 0]:
             win.blit(faceleft, (self.location[0], self.location[1]))
@@ -57,7 +62,8 @@ class Tank:
         elif self.dir == [0, 1]:
             win.blit(facedown, (self.location[0], self.location[1]))
 
-MainTank = Tank([250, 250], 32, 32, 0, 0)
+
+MainTank = Tank([250, 250], 32, 32, 0, 0, 0, 0)
 
 
 def redrawWindows():
@@ -77,22 +83,26 @@ while run:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT and MainTank.location[0] > 0:
                 MainTank.dir = [-1, 0]
-                MainTank.acceleration = -0.2
+                MainTank.accelerationX = -0.2
             elif event.key == pygame.K_RIGHT and MainTank.location[0] < window[0] - MainTank.width:
                 MainTank.dir = [1, 0]
-                MainTank.acceleration = 0.2
+                MainTank.accelerationX = 0.2
             elif event.key == pygame.K_UP and MainTank.location[1] > 0:
                 MainTank.dir = [0, -1]
-                MainTank.acceleration = -0.2
+                MainTank.accelerationY = -0.2
             elif event.key == pygame.K_DOWN and MainTank.location[1] < window[1] - MainTank.height:
                 MainTank.dir = [0, 1]
-                MainTank.acceleration = 0.2
+                MainTank.accelerationY = 0.2
         elif event.type == pygame.KEYUP:
-            if event.key in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN):
-                MainTank.acceleration = 0
+            if event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+                MainTank.accelerationX = 0
+            elif event.key in (pygame.K_UP, pygame.K_DOWN):
+                MainTank.accelerationY = 0
 
-    if MainTank.acceleration == 0:
-        MainTank.vel *= 0.92
+    if MainTank.accelerationX == 0:
+        MainTank.velX *= 0.92
+    elif MainTank.accelerationY == 0:
+        MainTank.velY *= 0.92
 
     MainTank.move()
     redrawWindows()
