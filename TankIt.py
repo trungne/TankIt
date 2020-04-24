@@ -11,8 +11,6 @@ clock = pygame.time.Clock()
 # images file import:
 bg = pygame.image.load('grass.png')
 
-
-
 MainTank = Tank([250, 250], 32, 32, 0, 0, 0, 0)
 
 

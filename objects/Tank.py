@@ -49,10 +49,10 @@ class Tank:
 
     def decelerate(self):
         if self.accelerationX == 0:
-            self.velX *= 0.98
+            self.velX *= 0.92
 
         if self.accelerationY == 0:
-            self.velY *= 0.98
+            self.velY *= 0.92
 
     def redrawtank(self, win):
         if self.dir == [-1, 0]:
