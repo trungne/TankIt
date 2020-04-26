@@ -2,3 +2,5 @@
 PNG/
 SCML/
 TXT/
+!**/__pycache__/
+__pycache__/

@@ -1,22 +1,23 @@
 import pygame
 from objects.Tank import Tank
+from constants import *
+
 pygame.init()
 
 # basic display
-window = (640, 640)
-win = pygame.display.set_mode(window)
+win = pygame.display.set_mode(WIN)
 pygame.display.set_caption("TankIt")
 clock = pygame.time.Clock()
 
 # images file import:
-bg = pygame.image.load('grass.png')
+bg = pygame.image.load('assets/grass.png')
 
 MainTank = Tank([250, 250], 32, 32, 0, 0, 0, 0)
 
 
 def redrawWindows():
     win.blit(bg, (0, 0))
-    MainTank.redrawtank(win)
+    MainTank.redraw(win)
     pygame.display.update()
 
 
@@ -29,29 +30,18 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                MainTank.dir = [-1, 0]
-                MainTank.accelerationX = -0.3
-            if event.key == pygame.K_RIGHT:
-                MainTank.dir = [1, 0]
-                MainTank.accelerationX = 0.3
-            if event.key == pygame.K_UP:
-                MainTank.dir = [0, -1]
-                MainTank.accelerationY = -0.3
-            if event.key == pygame.K_DOWN:
-                MainTank.dir = [0, 1]
-                MainTank.accelerationY = 0.3
+            MainTank.update_movement(event.key)
         elif event.type == pygame.KEYUP:
-            if event.key in (pygame.K_LEFT, pygame.K_RIGHT):
-                MainTank.accelerationX = 0
-            if event.key in (pygame.K_UP, pygame.K_DOWN):
-                MainTank.accelerationY = 0
+            if event.key in (LEFT, RIGHT):
+                MainTank.accelerate(0, axis=0)
+            if event.key in (UP, DOWN):
+                MainTank.accelerate(0, axis=1)
 
     # deceleration
     MainTank.decelerate()
 
     # check boundaries
-    MainTank.move(window)
+    MainTank.move()
 
     redrawWindows()
 
