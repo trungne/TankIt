@@ -1,81 +1,69 @@
+import pygame
 from constants import *
 
+pygame.init()
 
-class Tank:
-    def __init__(self, location, width, height, velX, velY, aX, aY, dir=pygame.K_UP):
+
+class Tank(pygame.sprite.Sprite):
+    def __init__(self, position, vel):
+        super(Tank, self).__init__()
         # attributes
-        self.location = location
-        self.width = width
-        self.height = height
-        self.vel = [velX, velY]
-        self.acceleration = [aX, aY]
-        self.max_speed = MAX_SPEED
+        self.image = FACE_RIGHT
+        self.original_image = self.image
+        self.rect = self.image.get_rect(center=position)
+        self.position = pygame.math.Vector2(position)
+        self.direction = pygame.math.Vector2(1, 0)
+        self.vel = vel
+        self.acceleration = 0
+        self.angular_vel = 0
+        self.angle = 0
 
-        # facing
-        self.dir = dir
+    def update(self, event):
+        if event == LEFT:
+            self.angular_vel = -5
+        elif event == RIGHT:
+            self.angular_vel = 5
+        elif event == UP:
+            self.acceleration = ACCELERATION
+        elif event == DOWN:
+            self.acceleration = -ACCELERATION
 
-    def set_dir(self, direction):
-        self.dir = direction
+        # update velocity
+        if self.acceleration and abs(self.vel) < MAX_SPEED:
+            self.vel += self.acceleration
 
-    def move(self):
+        if not self.acceleration:
+            self.vel *= FRICTION
+            if abs(self.vel) < 0.001:
+                self.vel = 0
+
+        # rotating
+        if self.angular_vel:
+            # Rotate the direction vector and then the image.
+            self.direction.rotate_ip(self.angular_vel)
+            self.angle += self.angular_vel
+            self.image = pygame.transform.rotate(self.original_image, -self.angle)
+            self.rect = self.image.get_rect(center=self.rect.center)
+
+        # Update the position vector and the rect
+        updated_position = self.position + self.direction * self.vel
+        w, h = self.image.get_size()
+        if w // 2 < updated_position[0] < WIN[0] - w // 2:
+            self.position[0] = updated_position[0]
+        else:
+            self.vel = - self.vel
+            self.position[0] = self.position[0] + self.direction[0] * self.vel
+            self.acceleration = 0
+
+        if h // 2 < updated_position[1] < WIN[1] - h // 2:
+            self.position[1] = updated_position[1]
+        else:
+            self.vel = - self.vel
+            self.position[1] = self.position[1] + self.direction[1] * self.vel
+            self.acceleration = 0
+
+        self.rect.center = self.position
+
         # testing
-        # print(f'{self.location[0]},{self.location[1]}')
-
-        # constraint
-        if abs(self.vel[0]) < self.max_speed:
-            self.vel[0] += self.acceleration[0]
-
-        if abs(self.vel[1]) < self.max_speed:
-            self.vel[1] += self.acceleration[1]
-
-        # move object
-        self.update_location(axis=0)  # left/right movement
-        self.update_location(axis=1)  # up/down movement
-
-    def update_location(self, axis=0):
-        updated = self.location[axis] + self.vel[axis]
-
-        # if the tank haven't reach board limit, update its location
-        if self.vel[axis] and 0 < updated < WIN[axis] - self.width:
-            self.location[axis] = updated
-        # else bounce it back
-        else:
-            self.bounce_back(axis)
-
-    def bounce_back(self, axis=0):
-        self.vel[axis] = - self.vel[axis]
-        self.acceleration[axis] = 0
-
-    def update_movement(self, direction):
-        if direction == LEFT or direction == UP:
-            acceleration = -ACCELERATION
-        else:
-            acceleration = ACCELERATION
-
-        self.set_dir(direction)
-        self.accelerate(acceleration, self.get_current_axis())
-
-    def get_current_axis(self):
-        return 0 if self.dir == LEFT or self.dir == RIGHT else 1
-
-    # TODO: (?) Change the name of this function. In the case that
-    #  the amount given is 0, it is not really "accelerate", it just stops the tank.
-    def accelerate(self, amount, axis=0):
-        self.acceleration[axis] = amount
-
-    def decelerate(self):
-        if self.acceleration[0] == 0:
-            self.vel[0] *= FRICTION
-
-        if self.acceleration[1] == 0:
-            self.vel[1] *= FRICTION
-
-    def redraw(self, win):
-        if self.dir == LEFT:
-            win.blit(FACE_LEFT, (self.location[0], self.location[1]))
-        elif self.dir == RIGHT:
-            win.blit(FACE_RIGHT, (self.location[0], self.location[1]))
-        elif self.dir == UP:
-            win.blit(FACE_UP, (self.location[0], self.location[1]))
-        elif self.dir == DOWN:
-            win.blit(FACE_DOWN, (self.location[0], self.location[1]))
+        # print(self.position)
+        # print(self.rect.center)

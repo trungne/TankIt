@@ -16,4 +16,4 @@ FACE_RIGHT = pygame.image.load('assets/tankBaseright.png')
 FACE_UP = pygame.image.load('assets/tankBaseup.png')
 FACE_DOWN = pygame.image.load('assets/tankBasedown.png')
 MAX_SPEED = 6
-FRICTION = 0.92
+FRICTION = 0.95
