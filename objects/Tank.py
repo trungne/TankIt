@@ -33,9 +33,9 @@ class Tank(pygame.sprite.Sprite):
             self.vel += self.acceleration
 
         if not self.acceleration:
-            self.vel *= FRICTION
+            self.vel *= FRICTION  # decreasing by percent each time there is no acceleration
             if abs(self.vel) < 0.001:
-                self.vel = 0
+                self.vel = 0  # if vel is too small, make it zero.
 
         # rotating
         if self.angular_vel:
@@ -46,20 +46,23 @@ class Tank(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(center=self.rect.center)
 
         # Update the position vector and the rect
+        # TODO: fix object doesn't change angle when bouncing.
         updated_position = self.position + self.direction * self.vel
         w, h = self.image.get_size()
-        if w // 2 < updated_position[0] < WIN[0] - w // 2:
-            self.position[0] = updated_position[0]
+        if w // 2 < updated_position[0] < WIN[0] - w // 2:  # check x axis
+            self.position[0] += self.direction[0] * self.vel
         else:
             self.vel = - self.vel
-            self.position[0] = self.position[0] + self.direction[0] * self.vel
+            self.position[0] += self.direction[0] * self.vel
+            # change y
             self.acceleration = 0
 
-        if h // 2 < updated_position[1] < WIN[1] - h // 2:
-            self.position[1] = updated_position[1]
+        if h // 2 < updated_position[1] < WIN[1] - h // 2:  # check y axis
+            self.position[1] += self.direction[1] * self.vel
         else:
             self.vel = - self.vel
-            self.position[1] = self.position[1] + self.direction[1] * self.vel
+            self.position[1] += self.direction[1] * self.vel
+            # change x
             self.acceleration = 0
 
         self.rect.center = self.position
