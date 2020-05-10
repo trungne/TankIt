@@ -3,14 +3,13 @@ from objects.Tank import Tank
 from constants import *
 
 pygame.init()
-
 # basic display
 win = pygame.display.set_mode(WIN)
 pygame.display.set_caption("TankIt")
 
 # images file import:
 bg = pygame.image.load('assets/grass.png')
-MainTank = Tank([250, 250], 0)
+MainTank = Tank([250, 250], (0, 0))
 MainTankSprite = pygame.sprite.Group(MainTank)
 clock = pygame.time.Clock()
 

@@ -1,7 +1,5 @@
-import pygame
 from constants import *
-
-pygame.init()
+from util.helper import has_reached_horizontal_boundary, has_reached_vertical_boundary
 
 
 class Tank(pygame.sprite.Sprite):
@@ -13,7 +11,9 @@ class Tank(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=position)
         self.position = pygame.math.Vector2(position)
         self.direction = pygame.math.Vector2(1, 0)
-        self.vel = vel
+        # basically, vel is not a vector but we will use it as a vector for convenience.
+        # x and y of vel will always be the same
+        self.vel = pygame.math.Vector2(vel)
         self.acceleration = 0
         self.angular_vel = 0
         self.angle = 0
@@ -29,13 +29,14 @@ class Tank(pygame.sprite.Sprite):
             self.acceleration = -ACCELERATION
 
         # update velocity
-        if self.acceleration and abs(self.vel) < MAX_SPEED:
-            self.vel += self.acceleration
+        if self.acceleration and abs(self.vel[0]) < MAX_SPEED:
+            # increase both x and y of vel by acceleration
+            self.vel = self.vel.elementwise() + self.acceleration
 
         if not self.acceleration:
             self.vel *= FRICTION  # decreasing by percent each time there is no acceleration
-            if abs(self.vel) < 0.001:
-                self.vel = 0  # if vel is too small, make it zero.
+            if abs(self.vel[0]) < 0.001:
+                self.vel.update(0, 0)  # if vel is too small, make it zero.
 
         # rotating
         if self.angular_vel:
@@ -45,28 +46,17 @@ class Tank(pygame.sprite.Sprite):
             self.image = pygame.transform.rotate(self.original_image, -self.angle)
             self.rect = self.image.get_rect(center=self.rect.center)
 
-        # Update the position vector and the rect
         # TODO: fix object doesn't change angle when bouncing.
-        updated_position = self.position + self.direction * self.vel
-        w, h = self.image.get_size()
-        if w // 2 < updated_position[0] < WIN[0] - w // 2:  # check x axis
-            self.position[0] += self.direction[0] * self.vel
-        else:
-            self.vel = - self.vel
-            self.position[0] += self.direction[0] * self.vel
-            # change y
+
+        # stop the tank and bounce it back when reaching screen boundaries
+        new_rect = self.rect.move(self.direction.elementwise() * self.vel.elementwise())
+
+        if has_reached_horizontal_boundary(new_rect):
+            self.vel[0] = - self.vel[0]
             self.acceleration = 0
 
-        if h // 2 < updated_position[1] < WIN[1] - h // 2:  # check y axis
-            self.position[1] += self.direction[1] * self.vel
-        else:
-            self.vel = - self.vel
-            self.position[1] += self.direction[1] * self.vel
-            # change x
+        if has_reached_vertical_boundary(new_rect):
+            self.vel[1] = - self.vel[1]
             self.acceleration = 0
 
-        self.rect.center = self.position
-
-        # testing
-        # print(self.position)
-        # print(self.rect.center)
+        self.rect.move_ip(self.direction.elementwise() * self.vel.elementwise())
