@@ -79,33 +79,33 @@ class Game:
             event: pygame's event.
         """
 
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
             self.run = False
             pygame.quit()
             exit()
         elif event.type == pygame.KEYDOWN:
             for tank in self.tank_group:
                 tank.update(key=event.key)
-
         elif event.type == pygame.KEYUP:
             for tank in self.tank_group:
+                # tank.keys[:2] = left, right keys pressed                
                 if event.key in tank.keys[:2]:
                     tank.angular_vel = 0
+                # tank.keys[:2] = up, down keys pressed
                 if event.key in tank.keys[-2:]:
                     tank.acceleration = 0
 
-    def add_tank(self, position, vel, image, keys=()):
+    def add_tank(self, position, image, keys=()):
         """Add new tank to the game.
         Args:
             position (tuple of int): List of x-coordinate and y-coordinate of the tank.
-            vel (tuple of int): Tank starting velocity.
             image (pygame.Surface): Tank image as a pygame.Surface instance.
             keys (tuple of int): Tuple with size of 4 contains keys for controlling the tank.
                 The order of keys should be (LEFT, RIGHT, UP, DOWN).
         """
         self.num_tanks += 1
 
-        tank = Tank(position, vel, image, keys)
+        tank = Tank(position, image, keys)
         tank._id = self.num_tanks
 
         self.tank_group.add(tank)

@@ -41,12 +41,10 @@
 # pygame.quit()
 
 from Game import Game
-import random
 from constants import *
 
 game = Game()
-game.add_tank((100, 100), (0, 0), FACE_RIGHT, (LEFT, RIGHT, UP, DOWN))
-game.add_tank((255, 255), (0, 0), FACE_RIGHT, (A, D, W, S))
-game.add_tank((random.randint(30, 255), random.randint(30, 255)), (0, 0), FACE_RIGHT,
-              (pygame.K_f, pygame.K_h, pygame.K_t, pygame.K_s))
+game.add_tank((100, 100), FACE_RIGHT, (LEFT, RIGHT, UP, DOWN))
+game.add_tank((255, 255), FACE_RIGHT, (A, D, W, S))
+
 game.start()
